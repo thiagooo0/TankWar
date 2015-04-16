@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 这是用于传输数据的xml文件的格式 -->
+<user id = '314159'>
+    <personal>
+        <target>login/logout/register/change</target>
+        <type>ask/sucess/fail</type>
+        <name> changsan</name>
+        <password>12314</password>
+        <photoID>1</photoID>
+        <ach>
+            <mode>solo</mode>
+            <gross>15</gross>
+            <ratio>90%</ratio>
+        </ach>
+        <worning>nothing worning</worning>
+    </personal>
+    
+    <friends>
+        <friend>
+            <target>add/delete/invite/show</traget>
+            <type>ask/succuss/fail</type>
+            <id>314200</id>
+            <name>flyafly</name>
+            <photoID>3</photoID>
+            <ach>            
+                <mode>solo</mode>
+                <gross>15</gross>
+                <ratio>90%</ratio>
+            </ach>
+        </friend>
+    </friends>
+    
+    <messages>
+        <message>
+            <id>32093</id>
+            <content time = '2012-3-14 22:14:224'>hey dude</content>
+        </message>
+    </messages>
+                
+    <team>
+        <mode>solo</mode>
+        <teammate>
+            <id>333221</id>
+            <name>430</name>
+            <photoID>2</photoID>
+        </teammate>
+    </team>
+    
+    <tank>
+        <kooooooooooooooooooooooooooooooooooooooooooooooooooooooog></kooooooooooooooooooooooooooooooooooooooooooooooooooooooog>
+    </tank>
+    
+    <map>
+        <koooooooooooooooooooooooooooooooooooooooooooooooooooooong></koooooooooooooooooooooooooooooooooooooooooooooooooooooong>
+    </map>
+</user id = '12314'>
