@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 public class Test
 {
-	public static String url ="jdbc:sqlserver://localhost:1433;DatabaseName = ktv_base"; 
+	public static String url ="jdbc:sqlserver://localhost:1433;DatabaseName = TankWar"; 
 	public static String name = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 	public static String user = "sa";
 	public static String password = "066310309";
@@ -45,7 +45,18 @@ public class Test
 		{
 			System.out.println("statement");
 		}
-		
+		try
+		{
+			ResultSet set = st.executeQuery("select * from Users");
+			
+			System.out.println(set.getString(1) + " " +set.next() + " " + set.getRow() + " " + set.getString(2) + " " + set.next() + " " + set.getRow());
+//			System.out.println(set.getRow() + "-" + set.getString(1) + "-" + set.next());
+//			System.out.println(set.getRow() + "-" + set.getString(2));
+		} catch (SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println("sucess");
 	}
 	

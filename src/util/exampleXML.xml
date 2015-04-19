@@ -17,8 +17,8 @@
     
     <friends>
         <friend>
-            <target>add/delete/invite/show</traget>
             <type>ask/succuss/fail</type>
+            <target>add/delete/invite/show</target>
             <id>314200</id>
             <name>flyafly</name>
             <photoID>3</photoID>
@@ -53,4 +53,4 @@
     <map>
         <koooooooooooooooooooooooooooooooooooooooooooooooooooooong></koooooooooooooooooooooooooooooooooooooooooooooooooooooong>
     </map>
-</user id = '12314'>
+</user>
