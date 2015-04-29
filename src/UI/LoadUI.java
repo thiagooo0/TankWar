@@ -25,6 +25,17 @@ public class LoadUI extends JFrame {
 	private JTextField textField;
 	private JPasswordField passwordField;
 	
+//
+//	private static class GetInstance
+//	{
+//
+//		private static LoadUI loadUI = new LoadUI();
+//	}
+//	
+//	public LoadUI getLoadUI()
+//	{
+//		return GetInstance.loadUI;
+//	}
 	
 	
 	
@@ -85,6 +96,9 @@ public class LoadUI extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				
+				
+				
 				// TODO Auto-generated method stub
 				User u1 = new User("oye","123456",1001);
 				User u2 = new User("ynot","123123",1002);

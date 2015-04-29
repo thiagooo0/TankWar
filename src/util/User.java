@@ -24,7 +24,7 @@ public class User
 	public static int bgWorking = 0;
 	
 	public static Boolean isChange = false;//是否有改变，应该先检查此变量。	如果是真，则此对象有更新。如果是假，则没有变化。对于任何操作，都应该先把isChange改为真。
-	
+//	
 	
 	/**
 	 * 对于好友，判断时候在线。

@@ -3,21 +3,22 @@
 <user id = '314159'>
     <personal>
         <target>login/logout/register/change</target>
-        <type>ask/sucess/fail</type>
-        <name> changsan</name>
+        <type>ask/success/fail</type>
+        <name>changsan</name>
         <password>12314</password>
+        <newPassword>1234</newPassword>
         <photoID>1</photoID>
         <ach>
             <mode>solo</mode>
             <gross>15</gross>
             <ratio>90%</ratio>
         </ach>
-        <worning>nothing worning</worning>
+        <warning>nothing worning</warning>
     </personal>
     
     <friends>
-        <friend>
-            <type>ask/succuss/fail</type>
+        <friend isFriend = "true">
+            <type>ask/success/fail</type>
             <target>add/delete/invite/show</target>
             <id>314200</id>
             <name>flyafly</name>
@@ -36,7 +37,7 @@
             <content time = '2012-3-14 22:14:224'>hey dude</content>
         </message>
     </messages>
-                
+    
     <team>
         <mode>solo</mode>
         <teammate>

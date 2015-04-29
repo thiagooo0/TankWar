@@ -6,8 +6,13 @@ import java.net.UnknownHostException;
 //在客户端与服务器建立连接的类。
 public class ClientConnectThread
 {
-	private String serverAddress = "thiagooo0.vicp.cc";
-	private int serverPort = 48372;
+//	private String serverAddress = "thiagooo0.vicp.cc";
+//	private int serverPort = 48372;
+	
+	//测试用地址
+	private String serverAddress = "LocalHost";
+	private int serverPort = 4444;
+	
 	public static Socket socket;
 	
 	public void connect()
@@ -35,8 +40,16 @@ public class ClientConnectThread
 		cc.connect();
 		
 		SendMessage sm = new SendMessage();
-		sm.login("1", "23");
+//		sm.login("31415", "234567");
+//		sm.login("31420", "123456");
+//		sm.register("hallo", "2", "123456");
+		sm.addFriend_Ask("31433");
 		
+//		SendMessage sm2 = new SendMessage();
+//		sm2.logout();
+//		sm2.change(null, null, "uuu", "3");
+		
+//		sm.showFriend("31415");
 //		try
 //		{
 //			InetAddress address = InetAddress.getLocalHost();
