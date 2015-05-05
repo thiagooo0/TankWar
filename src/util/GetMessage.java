@@ -129,10 +129,15 @@ public class GetMessage extends Thread
 						//删除好友操作
 						else if(target.equals("delete"))
 						{
-							if(type.equals("ask"))
+							if(type.equals("success"))
 							{
 //								删除好友的操作
-//								deleteFriend();
+								deleteFriend_Success(friendEle);
+							}
+							
+							if(type.equals("fail"))
+							{
+								deleteFriend_Fail(friendEle);
 							}
 
 						}
@@ -178,6 +183,16 @@ public class GetMessage extends Thread
 				System.out.println("GetMessage--------warning class");
 			}
 		}
+		
+	}
+	
+	private void deleteFriend_Success(Element friendEle)
+	{
+		
+	}
+
+	private void deleteFriend_Fail(Element friendEle)
+	{
 		
 	}
 	

@@ -298,16 +298,87 @@ public class ParseXML
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			
-			
-			//看下是否在线
-
 		}
 	}
 	
+	//成功添加
 	private void addFriend_Success(Element friendEle)
 	{
 
+		//要分别向两个人发送消息。只是添加进列表就好了.想A发b的消息，向b发a的消息
+		String fid = friendEle.getChildText("id");
+
+		//想数据库添加记录
+		if(Integer.parseInt(fid.trim()) < Integer.parseInt(id.trim()))
+		{
+			sql = "insert into Friendship(ID1, ID2) values('" + fid + "','" + id + "')";
+		}
+		else
+		{
+			sql = "insert into Friendship(ID1, ID2) values('" + id + "','" + fid + "')";
+		}
+		
+		try
+		{
+			if(st.execute(sql))
+			{
+				String finfo = null;//记录对方的个人文件地址
+				//向id发送消息
+				ResultSet set = st.executeQuery("select * from Users where ID = '" + fid + "'");
+				if(set.next())
+				{
+					Document doc = new Document();
+					Element user1 = new Element("user");
+					user1.setAttribute("id", id);
+					Element friends1 = new Element("friends");
+					Element friend1 = new Element("friend");
+					friend1.addContent(new Element("type").setText("success")).addContent(new Element("target").setText("add"))
+					.addContent(new Element("id").setText(id)).addContent(new Element("name").setText(set.getString("name")))
+					.addContent(new Element("photoID").setText(set.getString("PhotoID")));
+					
+					finfo = set.getString("Info");
+					
+					doc.addContent(user1);
+					user1.addContent(friends1);
+					friends1.addContent(friend1);
+					
+					send(doc);
+				}
+				
+				//向fid发送消息
+				set = st.executeQuery("select * from Users where ID = '" + id + "'");
+				Element friend2 = new Element("friend");
+				friend2.addContent(new Element("type").setText("success")).addContent(new Element("target").setText("add"))
+				.addContent(new Element("id").setText(id)).addContent(new Element("name").setText(set.getString("name")))
+				.addContent(new Element("photoID").setText(set.getString("PhotoID")));
+				//要判断是否在线
+				Socket fsocket = userMap.get(fid);
+				if(fsocket == null)
+				{
+					//不在线
+					Document fdoc = bulidXML(finfo);
+					fdoc.getRootElement().getChild("friends").addContent(friend2);
+					saveXML(fdoc, finfo);
+				}else
+				{
+					//在线
+					Document fdoc = new Document();
+					Element user2 = new Element("user");
+					user2.setAttribute("id", fid);
+					Element friends2 = new Element("friends");
+					doc.addContent(user2);
+					user2.addContent(friends2);
+					friends2.addContent(friend2);
+					
+					send(fdoc);
+				}
+			}
+		} catch (SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	//删除好友
