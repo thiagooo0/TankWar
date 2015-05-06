@@ -19,7 +19,7 @@
     <friends>
         <friend isFriend = "true">
             <type>ask/success/fail</type>
-            <target>add/delete/invite/show</target>
+            <target>add/delete/show</target>
             <id>314200</id>
             <name>flyafly</name>
             <photoID>3</photoID>
@@ -28,6 +28,7 @@
                 <gross>15</gross>
                 <ratio>90%</ratio>
             </ach>
+            <warning>nothing worning</warning>
         </friend>
     </friends>
     
@@ -40,6 +41,8 @@
     
     <team>
         <mode>solo</mode>
+        <target>invite/show</target>
+        <type>ask/success/fail</type>
         <teammate>
             <id>333221</id>
             <name>430</name>

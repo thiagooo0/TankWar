@@ -74,7 +74,7 @@ public class SendMessage
 	public void logout()
 	{
 		//test,真正用的时候记得删掉
-		userEle.setAttribute("id", "31415");
+//		userEle.setAttribute("id", "31415");
 		
 		//
 		Element personal  = new Element("personal");
@@ -93,7 +93,7 @@ public class SendMessage
 	public void change(String password, String newPassword, String name, String photoID)
 	{
 		//test,真正用的时候记得删掉
-		userEle.setAttribute("id","31415");
+//		userEle.setAttribute("id","31415");
 		
 		//
 		Element personal = new Element("personal");
@@ -134,8 +134,7 @@ public class SendMessage
 	public void friend(String fid, String ftype, String ftarget)
 	{
 		//test,真正用的时候记得删掉
-		userEle.setAttribute("id","31415");
-		
+//		userEle.setAttribute("id","31420");
 		
 		Element friends = new Element("friends");
 		Element friend = new Element("friend");
@@ -151,6 +150,7 @@ public class SendMessage
 	    friend.addContent(type).addContent(target).addContent(fidEle);
 	    
 	    this.send();
+	   
 	}
 	
 	public void showFriend(String fid)
@@ -194,22 +194,22 @@ public class SendMessage
 	}
 	
 	
-	//邀请游戏
-    public void inviteFriend_Ask(String fid)
-    {
-    	friend(fid, "ask", "invite");
-    }
-    //接受邀请
-    public void inviteFriend_Sucess(String fid)
-    {
-    	friend(fid, "success", "invite");
-    }
-    //拒绝邀请
-    public void inviteFriend_Fail(String fid)
-    {
-    	friend(fid, "fail", "invite");
-    }
-    
+//	//邀请游戏
+//    public void inviteFriend_Ask(String fid)
+//    {
+//    	friend(fid, "ask", "invite");
+//    }
+//    //接受邀请
+//    public void inviteFriend_Sucess(String fid)
+//    {
+//    	friend(fid, "success", "invite");
+//    }
+//    //拒绝邀请
+//    public void inviteFriend_Fail(String fid)
+//    {
+//    	friend(fid, "fail", "invite");
+//    }
+//    
 	//聊天
 	
 
@@ -227,6 +227,7 @@ public class SendMessage
 
 			//发送文档对象出去
 			oos.writeObject(document);
+			System.out.println("send one message");
 		} catch (IOException e)
 		{
 			//这些要不要在界面上体现呢？

@@ -25,7 +25,7 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
-public class ParseXML
+public class ParseXML extends Thread
 {
 	public static HashMap<String, Socket> userMap = new HashMap<String, Socket>();//存储用户和对应的套接字
     private Socket socket;
@@ -34,26 +34,41 @@ public class ParseXML
     public static Statement st;
 	private String sql = "";
     private String infoAddress = "E:\\TankWarInfo\\";//个人文档存储地址
-	
-	//对用户做判断：是否第一次登陆啊，要做什么工作啊。
-	@SuppressWarnings("unchecked")
-	public void init(Socket socket)
+    private InputStream is;
+	private boolean flag = true;
+    
+	public ParseXML(Socket socket)
 	{
+		this.socket = socket;
 		try
 		{
-			this.socket = socket;
-			//等到输入流
-			InputStream is = socket.getInputStream();
-			ObjectInputStream oos = new ObjectInputStream(is);
+			is = socket.getInputStream();
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+    
+    @Override
+    public void run()
+    {
+    	while(flag)
+    	{	//对用户做判断：是否第一次登陆啊，要做什么工作啊。
+    		try
+    		{
+    			//等到输入流
+  
+//    			System.out.println("wait new one");
+    			ObjectInputStream oos = new ObjectInputStream(is);
 
-			//得到文件对象
-			doc = (Document)oos.readObject();
-			Element user = doc.getRootElement();
-			id = user.getAttributeValue("id");
-
-			
-			
-			saveXML(doc, "text2.xml");
+    			//得到文件对象
+    			doc = (Document)oos.readObject();
+    			Element user = doc.getRootElement();
+    			id = user.getAttributeValue("id");
+    			    			System.out.println("get one message from " + id);
+    			
+    			saveXML(doc, "text2.xml");
 //
 //			FileWriter writer = new FileWriter("text2.xml");
 //			
@@ -63,140 +78,146 @@ public class ParseXML
 //			XMLOutputter put = new XMLOutputter(f);
 //			
 //			put.output(doc, writer);
-			
-			
-			
-			
-			
-			//是否个人信息的修改
-			 Element personal = user.getChild("personal"); 
-			if(personal != null)
-			{
-				Element target = personal.getChild("target");
-				Element type = personal.getChild("type");
-				
-				if("ask".equals(type.getText()))
-				{
-					String targetText = target.getText();
-
-					//登陆
-					if("login".equals(targetText))
-					{
-						Element password = personal.getChild("password");
-						login(id, password);
-						return;
-					}
-					//注册
-					else if("register".equals(targetText))
-					{
-						register();
-                        return;
-					}
-					//登出
-					else if("logout".equals(targetText))
-					{
-						logout(id);
-						return;
-					}
-					//改变
-					else if("change".equals(targetText))
-					{
-						change();
-					}
-				}
+    			
+    			
+    			
+    			
+    			
+    			//是否个人信息的修改
+    			Element personal = user.getChild("personal"); 
+    			if(personal != null)
+    			{
+    				Element target = personal.getChild("target");
+    				Element type = personal.getChild("type");
+    				
+    				if("ask".equals(type.getText()))
+    				{
+    					String targetText = target.getText();
+    					
+    					//登陆
+    					if("login".equals(targetText))
+    					{
+    						Element password = personal.getChild("password");
+    						login(id, password);
+//    						break;
+    					}
+    					//注册
+    					else if("register".equals(targetText))
+    					{
+    						register();
+//    						break;
+    					}
+    					//登出
+    					else if("logout".equals(targetText))
+    					{
+    						logout(id);
+//    						break;
+    					}
+    					//改变
+    					else if("change".equals(targetText))
+    					{
+    						change();
+    					}
+    				}
 //				if(!userMap.containsKey(id))
 //				userMap.put(id, socket);
-			}
-			
-			//关于好友的操作，不包括聊天
-			Element friends = user.getChild("friends");
-			if(friends != null)
-			{
-				List<Element> friendList = friends.getChildren("friend");
-				int length = friendList.size();
-
-				for(int i = 0; i < length; i++)
-				{
-					Element friendEle = friendList.get(i);
-
-					String target = friendEle.getChild("target").getText();		
-					String type = friendEle.getChild("type").getText();
-					
-					//搜索或者展示好友
-					if(target.equals("show"))
-					{
-						if(type.equals("ask"))
-						{
-							//可能是添加好友时的搜索，有可能是查看好友资料，要看清楚。
-							showFriend(friendEle);
-						}
-					}
-					//添加好友操作
-					else if(target.equals("add"))
-					{
-						if(type.equals("ask"))
-						{
-							//添加好友请求
-							addFriend_Ask(friendEle);
-							return;
-						}
-						if(type.equals("success"))
-						{
-							//确认添加好友。不添加就不用返回了
-							addFriend_Success(friendEle);
-						}
-					}
-					//删除好友操作
-					else if(target.equals("delete"))
-					{
-						if(type.equals("ask"))
-						{
-							//删除好友的操作
-							deleteFriend(friendEle);
-						}
-
-					}
-					//邀请游戏
-					else if(target.equals("invite"))
-					{
-						if(type.equals("ask"))
-						{
-							//邀请好友游戏
-							inviteFriend_Ask(friendEle);
-						}
-						if(type.equals("sucess"))
-						{
-							//接受邀请
-							inviteFriend_Sucess(friendEle);
-						}
-						if(type.equals("fail"))
-						{
-							//不接受邀请_
-							inviteFriend_Fail(friendEle);
-						}
-					}
-					
-				}
-			}
-			
-			
-		} catch (IOException e)
-		{
-			System.out.println("can`t find a socket in ParseXML creater");
-		} catch (ClassNotFoundException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		send();
-	}
-	
+    			}
+    			
+    			//关于好友的操作，不包括聊天
+    			Element friends = user.getChild("friends");
+    			if(friends != null)
+    			{
+    				@SuppressWarnings("unchecked")
+    				List<Element> friendList = friends.getChildren("friend");
+    				int length = friendList.size();
+    				
+    				for(int i = 0; i < length; i++)
+    				{
+    					Element friendEle = friendList.get(i);
+    					
+    					String target = friendEle.getChild("target").getText();		
+    					String type = friendEle.getChild("type").getText();
+    					
+    					//搜索或者展示好友
+    					if(target.equals("show"))
+    					{
+    						if(type.equals("ask"))
+    						{
+    							//可能是添加好友时的搜索，有可能是查看好友资料，要看清楚。
+    							showFriend(friendEle);
+    						}
+    					}
+    					//添加好友操作
+    					else if(target.equals("add"))
+    					{
+    						if(type.equals("ask"))
+    						{
+    							//添加好友请求
+    							addFriend_Ask(friendEle);
+//    							break;
+    						}
+    						if(type.equals("success"))
+    						{
+    							//确认添加好友。不添加就不用返回了
+    							addFriend_Success(friendEle);
+    						}
+    					}
+    					//删除好友操作
+    					else if(target.equals("delete"))
+    					{
+    						if(type.equals("ask"))
+    						{
+    							//删除好友的操作
+    							deleteFriend(friendEle);
+    						}
+    						
+    					}
+    					//邀请游戏
+    					else if(target.equals("invite"))
+    					{
+    						if(type.equals("ask"))
+    						{
+    							//邀请好友游戏
+    							inviteFriend_Ask(friendEle);
+    						}
+    						if(type.equals("sucess"))
+    						{
+    							//接受邀请
+    							inviteFriend_Sucess(friendEle);
+    						}
+    						if(type.equals("fail"))
+    						{
+    							//不接受邀请_
+    							inviteFriend_Fail(friendEle);
+    						}
+    					}
+    					
+    				}
+    			}
+    			
+    			
+    		} catch (IOException e)
+    		{
+    			System.out.println("lost connect whit id: " + id);
+    			logout(id);
+    			
+    		} catch (ClassNotFoundException e)
+    		{
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+//    		send();
+//    		System.out.println("??");
+    	}
+    }
+    
 	//添加好友
 	private void addFriend_Ask(Element friendEle)
 	{
 
 		String fid = friendEle.getChild("id").getText();
 		
+		System.out.println("id: " + id + " 想加 id:" + fid + " 为好友");
 		
 		if(isFriend(fid))//已经是好友了
 		{
@@ -237,7 +258,6 @@ public class ParseXML
 				
 				if(fsocket == null)//不在线，写到他的个人文档去。
 				{
-					System.out.println("不在线哦，我们存起来啦");
 					set = st.executeQuery("select Info from Users where ID = '" + fid + "'");
 					if(set.next() == false)
 					{
@@ -262,7 +282,7 @@ public class ParseXML
 						send(fdoc, socket);
 						return;
 					}
-					set.next();
+//					set.next();
 					//9:30
 					//得到好友个人文档的存储地址
 					String info = set.getString("Info");
@@ -278,7 +298,7 @@ public class ParseXML
 				}
 				else
 				{
-					System.out.println("好友在线哦");
+					System.out.println("此人在线哦");
 					//在线，发送消息
 					Document fdoc = new Document();
 					Element user = new Element("user");
@@ -384,7 +404,62 @@ public class ParseXML
 	//删除好友
 	private void deleteFriend(Element friendEle)
 	{
+         //删除好友,首先还是判断是否盆友把。然后再去把记录删掉。
+				
+		String fid = friendEle.getChildText("id");
+		
+		Document document2 = new Document();
+		Element user2 = new Element("user");
+		user2.setAttribute("id", id);
+		Element friends2 = new Element("friends");
+		Element friend2 = new Element("friend");
+		document2.addContent(user2);
+		user2.addContent(friends2);
+		friends2.addContent(friend2);
+		
+		Element type2 = new Element("type");
+		Element target2 = new Element("target");
+		target2.setText("delete");
+		Element id2 = new Element("id");
+		id2.setText(fid);
+		friend2.addContent(type2).addContent(target2).addContent(id2);
+		
+		if(Integer.parseInt(id.trim()) < Integer.parseInt(fid.trim()))
+		{
+//			System.out.println("test");
+			sql = "select * from Friendship where ID1 = '" + id + "' and ID2 = '" + fid + "'";
+		}
+		else
+		{
+			sql = "select * from Friendship where ID1 = '" + fid + "' and ID2 = '" + id + "'";
+		}
+		
+		try
+		{
+			ResultSet set = st.executeQuery(sql);
+			if(set.next() == false)
+			{
+				//不是好友。。
+				//不怎么可能
+			}
+			else
+			{
+				set.deleteRow();
+				type2.setText("success");
+			}
+		} catch (SQLException e)
+		{
+			Element warning2 = new Element("warning");
+			warning2.setText("删除错误");
+			friend2.addContent(warning2);
+			type2.setText("fail");
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
+		send(document2);
+          
+		
 	}
 	
 	//邀请游戏
@@ -427,7 +502,10 @@ public class ParseXML
 		Element user1 = document.getRootElement();
 		user1.getChild("friends").removeChildren("friend");
 		user1.getChild("messages").removeChildren("message");
-		
+		user1.getChild("personal").removeChildren("target");
+		user1.getChild("personal").removeChildren("type");
+		user1.getChild("personal").removeChildren("photoID");
+		user1.getChild("personal").removeChildren("name");
 		saveXML(document, info);
 	
 	}
@@ -484,6 +562,7 @@ public class ParseXML
           return true;
 	
     }
+    
     
 //显示其他用户信息	
 	private void showFriend(Element friendEle)
@@ -588,6 +667,7 @@ public class ParseXML
 		//如果以后知道可以得到ip地址，可以用数据库存储用户的ip地址，不需要用到map
 		userMap.remove(id);
 //		Document doc = new Document();
+		Document document2 = new Document();
 		
 		Element user = new Element("user");
 		user.setAttribute("id", id);
@@ -600,11 +680,13 @@ public class ParseXML
 		Element traget = new Element("target");
 		traget.setText("logout");
 		
-		doc.addContent(user);
+		document2.addContent(user);
 		user.addContent(personal);
 		personal.addContent(type).addContent(traget);
 
 		send();
+		
+		flag = false;
 	}
 	
 	//改变
@@ -780,7 +862,7 @@ public class ParseXML
 							
 							//完成，发出去
 							send(document3);
-							
+
 							//发完要把message和friend删掉。。
 							//要写清空函数！！
 							if(info != null)
@@ -841,7 +923,6 @@ public class ParseXML
 			e.printStackTrace();
 		}
 		send(document);
-		
 //		
 //		//处理登陆
 //		System.out.println(password.getText());
@@ -985,6 +1066,9 @@ public class ParseXML
 			ObjectOutputStream oos = new ObjectOutputStream(os);
 		
 			oos.writeObject(doc);
+			
+//			System.out.println("send one message");
+			
 //			Format f = Format.getRawFormat();
 //			f.setEncoding("UTF8");
 //			

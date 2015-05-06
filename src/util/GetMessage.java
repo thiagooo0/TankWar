@@ -141,25 +141,25 @@ public class GetMessage extends Thread
 							}
 
 						}
-						//ÑûÇëÓÎÏ·
-						else if(target.equals("invite"))
-						{
-							if(type.equals("ask"))
-							{
-								//ÑûÇëºÃÓÑÓÎÏ·
-//								inviteFriendAsk();
-							}
-							if(type.equals("sucess"))
-							{
-								//½ÓÊÜÑûÇë
-//								inviteFriendSucess();
-							}
-							if(type.equals("fail"))
-							{
-								//²»½ÓÊÜÑûÇë
-//								inviteFriendFail();
-							}
-						}
+//						//ÑûÇëÓÎÏ·
+//						else if(target.equals("invite"))
+//						{
+//							if(type.equals("ask"))
+//							{
+//								//ÑûÇëºÃÓÑÓÎÏ·
+////								inviteFriendAsk();
+//							}
+//							if(type.equals("sucess"))
+//							{
+//								//½ÓÊÜÑûÇë
+////								inviteFriendSucess();
+//							}
+//							if(type.equals("fail"))
+//							{
+//								//²»½ÓÊÜÑûÇë
+////								inviteFriendFail();
+//							}
+//						}
 						
 					}
 				}
@@ -188,12 +188,17 @@ public class GetMessage extends Thread
 	
 	private void deleteFriend_Success(Element friendEle)
 	{
-		
+
+		String fid = friendEle.getChildText("id");
+		System.out.println(fid + " not your friend anymore");
 	}
 
 	private void deleteFriend_Fail(Element friendEle)
 	{
+		String fid  = friendEle.getChildText("id");
+		String warning = friendEle.getChildText("warning");
 		
+		System.out.println("delete " + fid + "fail. because " + warning);
 	}
 	
 	private void addFriend_Fail(Element friendEle)
@@ -351,6 +356,13 @@ public class GetMessage extends Thread
 			    		System.out.println("friends: id=" + fid +" name=" + fname + "photoID" + fphotoID);
 			    	}
 			    }
+			    /*----------------------------------------------------------------------------------------------------
+			    -------------------------------------------TEST--------------------------------------------
+			    --------------------------------------------------------------------------------------------------*/
+//			    SendMessage sm = new SendMessage();
+//			    System.out.println("GM359----------------test");
+//			    sm.addFriend_Ask("31415");
+
 			}
 			
 			//Î´¶ÁÐÅÏ¢

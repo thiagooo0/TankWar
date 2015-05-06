@@ -75,8 +75,8 @@ public class ServerConnetThread extends Thread
 				Socket socket = serverSocket.accept();//建立服务端连接，如果接收到连接，应该写一个新的类来解析xml文件和存储socket
 
 				System.out.println("G");
-				ParseXML par = new ParseXML();
-				par.init(socket);
+				ParseXML par = new ParseXML(socket);
+				par.start();
 				
 				
 				
